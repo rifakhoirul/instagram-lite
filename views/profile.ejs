@@ -1,0 +1,107 @@
+<% include partial/header.ejs %>
+
+  <section class="p-4 border">
+    <div class="container">
+      <div id="profilePage" class="row align-items-center">
+        <div class="col-md-4 mb-3">
+          <img src=<%=profile[0].dataValues.profilepic.location%> class="rounded-circle profilepic" width="150px" height="150px">
+        </div>
+        <div class="col-md-8">
+          <div class="row align-items-center mb-3">
+            <div class="col-md-3">
+              <h2>
+                <%= username %>
+              </h2>
+            </div>
+            <div class="col-md-4">
+              <% if(username==usernameLogged){ %>
+                <a class="btn-sm btn-dark" href="#" id="editProfile" data-bs-toggle="modal"
+                  data-bs-target="#ediProfileModal">Edit Profile</a>
+                <% } else {%>
+                  <a class="btn-sm btn-primary followButton" href="#">Follow</a>
+                  <% } %>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div id="profileCounter" class="row">
+              <div class="col-md-3">
+                <%=posts.length%> <%=posts.length>1 ? 'posts':'post'%>
+              </div>
+              <div class="col-3">
+                0 followers
+              </div>
+              <div class="col-3">
+                0 following
+              </div>
+            </div>
+          </div>
+          <%if(profile[0]){%>
+          <div>
+            <strong><%=profile[0].dataValues.name%></strong>
+          </div>
+          <div>
+            <%=profile[0].dataValues.bio%>
+          </div>
+          <div>
+            <a href="https://<%=profile[0].dataValues.website%>"><%=profile[0].dataValues.website%></a>
+          </div>
+          <%}%>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row mt-4">
+        <% posts.forEach(item=>{%>
+          <div class="col-4 mb-3">
+            <a href="/posts/<%= item.dataValues.id %>"><img class='profileThumbnail' src="<%= item.dataValues.file[0].location %>" alt="..." width="300px"
+              height="300px"></a>
+          </div>
+          <% }); %>
+      </div>
+    </div>
+  </section>
+  
+<!-- Modal Edit Profile -->
+<div class="modal fade" id="ediProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+aria-labelledby="ediProfileModalLabel" aria-hidden="true">
+<div class="modal-dialog ">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="ediProfileModalLabel">Edit Profile</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form id="form-add-issue" action="/profile/<%=usernameLogged%>" method="POST" encType="multipart/form-data">
+      <div class="modal-body">
+        <label for="ediitProfilePic" class="form-label">Profile Photo</label>
+        <div data-id="img-preview" class="text-center"><img id="imgOld" src="<%=profile[0].dataValues.profilepic.location%>" class="mb-3" style="max-width:30%"></div>
+        <div class="mb-3 file-input">
+          <input type="file" data-id="0" id="ediitProfilePic" name="files0" class="form-control file-preview" />
+          <button id="delete-file-input" type="button" class="btn btn-outline-danger mt-2" hidden="">Remove
+            Photo</button>
+        </div>
+        <div class="mb-3">
+          <label for="editName" class="form-label">Name</label>
+          <input type="text" class="form-control" id="editName" name="editName" value="<%=profile[0].dataValues.name?profile[0].dataValues.name:''%>">
+        </div>
+        <div class="mb-3">
+          <label for="editBio" class="form-label">Bio</label>
+          <textarea type="text" class="form-control" id="editBio" name="editBio"><%=profile[0].dataValues.name?profile[0].dataValues.bio:''%></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="editWebsite" class="form-label">Website</label>
+          <input type="text" class="form-control" id="editWebsite" name="editWebsite" value="<%=profile[0].dataValues.name?profile[0].dataValues.website:''%>">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Profile</button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+  <% include partial/modal.ejs %>
+  <% include partial/footer.ejs %>

@@ -1,0 +1,208 @@
+<% include partial/header.ejs %>
+
+  <div class="container border mt-4 mb-5">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <%if(posts.dataValues.file.length>1){%>
+          <div id="carouselPost" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+            <div class="carousel-indicators">
+              <% posts.dataValues.file.forEach((element,index)=>{ %>
+                <button type="button" data-bs-target="#carouselPost" data-bs-slide-to="<%= index %>" class=<%=index==0
+                  ? "active" : "" %>></button>
+                <% }) %>
+            </div>
+            <div class="carousel-inner">
+              <% posts.dataValues.file.forEach((element,index)=>{ %>
+                <div class="carousel-item <%= index == 0 ? 'active':''%>">
+                  <img src="<%= element.location %>" class="d-block w-100" alt="...">
+                </div>
+                <% }) %>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselPost" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselPost" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <%}else{%>
+            <img src="<%= posts.dataValues.file[0].location %>" alt="img" class="w-100">
+            <%}%>
+      </div>
+      <div class="col-md-6">
+        <div class="row justify-content-between mb-1 mt-3 align-items-center">
+          <div class="col-5">
+            <a class="usernamePost" href="/profile/<%=posts.dataValues.User.dataValues.username%>"><img
+                src="<%=posts.dataValues.User.dataValues.Profile.dataValues.profilepic.location%>"
+                class="miniProfilePic me-2"><strong>
+                <%=posts.dataValues.User.dataValues.username%>
+              </strong>
+            </a>
+          </div>
+          <div class="col-4 text-end me-1">
+            <i class="bi bi-three-dots" data-bs-toggle="modal" data-bs-target="#pagePostModal"></i>
+          </div>
+        </div>
+        <hr>
+        <div class="mt-4">
+          <p>
+            <a class="usernamePost me-2" href="/profile/<%=posts.dataValues.User.dataValues.username%>"><img
+                src="<%=posts.dataValues.User.dataValues.Profile.dataValues.profilepic.location%>"
+                class="miniProfilePic me-2"><strong>
+                <%=posts.dataValues.User.dataValues.username%>
+              </strong>
+            </a>
+            <%= posts.dataValues.caption %>
+          </p>
+        </div>
+        <div class="mb-3">Comments:</div>
+        <div class="commentPostPage">
+          <%comments.forEach(item=>{%>
+            <div class="mt-1">
+              <p>
+                <a class="usernamePost me-2" href="/profile/<%=item.dataValues.User.dataValues.username%>"><img
+                    src="<%=item.dataValues.User.dataValues.Profile.dataValues.profilepic.location%>"
+                    class="miniProfilePic me-2"><strong>
+                    <%=item.dataValues.User.dataValues.username%>
+                  </strong>
+                </a>
+                <%= item.dataValues.comment %>
+              </p>
+            </div>
+            <%})%>
+            <%if(commentsLength>5){%>
+            <a id="moreCommentPage">Show more comment</a>
+            <%}%>  
+        </div>
+        <hr>
+        <div class="mb-4">
+
+          <div class="row justify-content-between">
+            <div class="col-4">
+
+              <%if(posts.dataValues.likes){%>
+                <h4><i class="bi <%=posts.dataValues.likes.indexOf(useridLogged)<0?'bi-heart':'bi-heart-fill'%>"
+                    postId="<%=posts.dataValues.id%>"></i><span class="ms-3"></span><i class="bi bi-send"
+                    data-bs-toggle="modal" data-bs-target="#sendModal"></i>
+                </h4>
+            </div>
+            <div class="col-4 text-end">
+              <h4><i class="bi bi-bookmark"></i></h4>
+            </div>
+          </div>
+          <strong>
+            <%=posts.dataValues.likes.length%> likes
+          </strong>
+
+          <%}else{%>
+            <h4><i class="bi bi-heart" postId="<%= posts.dataValues.id %>"></i><span class="ms-3"></span><i
+                class="bi bi-send" data-bs-toggle="modal" data-bs-target="#sendModal"></i>
+            </h4>
+        </div>
+        <div class="col-4 text-end">
+          <h4><i class="bi bi-bookmark"></i></h4>
+        </div>
+      </div>
+      <%}%>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <form class="comment" postId="<%= posts.dataValues.id %>">
+              <input type="text" style="border:none" placeholder="Add a comment...">
+            </form>
+          </div>
+        </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  <!-- Modal On Post -->
+  <div class="modal fade" id="pagePostModal" tabindex="-1" aria-labelledby="pagePostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="card">
+          <ul class="list-group list-group-flush text-center">
+            <%if(posts.dataValues.User.dataValues.username==usernameLogged){%>
+              <li class="list-group-item"><a href="/deletepost/<%=posts.dataValues.id%>" class="text-danger">Delete</a>
+              </li>
+              <%}else{%>
+                <li class="list-group-item text-danger" data-bs-dismiss="modal">Report</li>
+                <li class="list-group-item text-danger" data-bs-dismiss="modal">Unfollow</li>
+                <%}%>
+                  <li class="list-group-item" data-bs-dismiss="modal">Share to...</li>
+                  <li class="list-group-item" data-bs-dismiss="modal">Copy link</li>
+                  <li class="list-group-item" data-bs-dismiss="modal">Embed</li>
+                  <li class="list-group-item" data-bs-dismiss="modal">Cancel</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function () {
+      let postId = $("form").attr("postId")
+      let stopper2
+      $("body").on("click", "#moreCommentPage", async function () {
+        let html = ''
+        await $.ajax({
+          method: "GET",
+          url: `/commentpage/${postId}`,
+        }).done(function (data) {
+          if (data.comments.length == 0) { stopper2 = 1 }
+          data.comments.forEach(item => {
+            let comment = `
+          <div class="mt-1">
+              <p>
+                <a class="usernamePost me-2" href="/profile/${item.User.username}"><img
+                    src="${item.User.Profile.profilepic.location}"
+                    class="miniProfilePic me-2"><strong>
+                    ${item.User.username}
+                  </strong>
+                </a>
+                ${item.comment}
+              </p>
+            </div>`
+            html += comment
+          })
+        })
+        if (stopper2 == 1) {
+          $(this).hide()
+        } else {
+          $(this).before(html)
+        }
+      })
+
+      $("body").on("submit", ".comment", async function () {
+        event.preventDefault()
+        let postId = $(this).attr("postId")
+        let addComment = $(this).children().val()
+        let user,username
+        await $.ajax({
+          method: "GET",
+          url: "/comment",
+          data: { postId, addComment }
+        }).done(async function (data) {
+          username = data.username
+          user = data.user[0]
+        });
+        $(".commentPostPage").prepend(`
+        <div class="mt-1">
+              <p>
+                <a class="usernamePost me-2" href="/profile/${username}"><img
+                    src="${user.profilepic.location}"
+                    class="miniProfilePic me-2"><strong>
+                    ${username}
+                  </strong>
+                </a>
+                ${addComment}
+              </p>
+            </div>`
+        )
+        $(this).children().val('')
+      })
+    })
+  </script>
+  <% include partial/modal.ejs %>
+    <% include partial/footer.ejs %>

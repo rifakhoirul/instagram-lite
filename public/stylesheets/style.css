@@ -1,0 +1,117 @@
+/* *{
+  box-sizing: border-box;
+} */
+
+body::before{
+  display:block;
+  content:'';
+  height:60px;
+}
+
+.header-right{
+  margin-left:10px;
+  cursor: pointer;
+}
+
+.navbartitle{
+  font-family: 'Sofia';
+  font-size:26px;
+}
+
+.col-3 img{
+  object-fit: cover;
+}
+
+.profileThumbnail, .profilepic{
+  object-fit: cover;
+}
+
+a {
+  text-decoration: none;
+}
+
+input.middle:focus {
+  outline-width: 5px;
+}
+
+.usernamePost{
+  color:black;
+}
+
+h4 i, div i, .list-group-item{
+  cursor: pointer;
+}
+
+.miniProfilePic{
+  height: 35px;
+  width: 35px;
+  max-height: 35px;
+  max-width: 35px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.navProfilePic{
+  height: 28px;
+  width: 28px;
+  max-height: 28px;
+  max-width: 28px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.bi-heart-fill{
+  color:#DC3545;
+}
+
+.modal-header, .btn-primary{
+  background-color:#6610f2;
+  color:white;
+}
+
+.sizePic{
+  width:600px;
+  height:auto;
+}
+
+.commentPostPage{
+  display: block;
+  height: 200px;
+  overflow-x:auto;
+  white-space: nowrap
+}
+
+#moreCommentPage{
+  color:grey;
+  cursor:pointer;
+}
+#moreCommentPage:hover{
+  color:black;
+}
+
+@media(min-width:768px){
+  .bg-index{
+    height:100%;
+  }
+}
+@media(max-width:768px){
+  .col-4 img{
+    height: 105px;
+    width: 105px;
+  }
+  
+  #search{
+    display:none;
+  }
+  #profilePage{
+    text-align: center;
+  }
+  #profileCounter{
+    display:flex;
+    justify-content: center;
+  }
+  .sizePic{
+    width:auto;
+    height:auto;
+  }
+}

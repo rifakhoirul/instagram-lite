@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %> | Picturico
+  </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <script src="/javascripts/jquery.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+  <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color:#6610f2">
+    <div class="container">
+      <a href="/home" class="navbartitle text-light">Picturico</a>
+      <!-- <form class="navbar-nav ms-auto" id="search">
+        <input type="text" class="form-control" placeholder="Search">
+      </form> -->
+      <div class="navbar-nav ms-auto ">
+        <div class="row align-items-center">
+          <%if(url=="/home"){%>
+            <div class="col">
+              <a class="fs-4 header-right" data-bs-toggle="modal" data-bs-target="#newPostModal"><i
+                  class="bi bi-plus-circle link-light"></i></a>
+            </div>
+            <%}%>
+              <%if(url!="/home"){%>
+                <div class="col">
+                  <a href="/home" class="fs-4 header-right"><i class="bi bi-house-door link-light"></i></a>
+                </div>
+                <%}%>
+                  <div class="col">
+                    <a class="fs-4 header-right" data-bs-toggle="modal" data-bs-target="#notificationModal"><i
+                        class="bi bi-heart link-light"></i></a>
+                  </div>
+                  <div class="col">
+                    <a data-bs-toggle="modal" data-bs-target="#settingModal" class="fs-4 header-right"><i
+                      class="bi bi-gear link-light"></i></a>
+                  </div>
+                  <div class="col">
+                    <a href="/profile/<%=usernameLogged%>"><img class="navProfilePic" src="<%=profilePic%>" alt="profilePic"></a>
+                  </div>
+        </div>
+      </div>
+    </div>
+  </nav>

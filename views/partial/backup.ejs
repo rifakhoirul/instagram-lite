@@ -1,0 +1,233 @@
+<%posts.forEach((item,i)=>{%>
+    <%if(item.dataValues.file.length>1){%>
+        <div class="card mb-3" style="max-width: 600px;">
+            <div class="card-header bg-transparent">
+                <div class="row justify-content-between mb-1 mt-1 align-items-center">
+                    <div class="col-4">
+                        <a class="usernamePost" href="/profile/<%=item.dataValues.User.dataValues.username%>"><img
+                        src="<%=item.dataValues.User.dataValues.Profile.dataValues.profilepic.location%>"
+                        class="miniProfilePic me-2"><strong>
+                        <%=item.dataValues.User.dataValues.username%>
+                        </strong>
+                        </a>
+                    </div>
+                    <div class="col-4 text-end">
+                        <i class="bi bi-three-dots" data-bs-toggle="modal" data-bs-target="#onPostModal"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="carousel<%=i%>" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                <div class="carousel-indicators">
+                    <% item.dataValues.file.forEach((element,index)=>{ %>
+                    <button type="button" data-bs-target="#carousel<%=i%>" data-bs-slide-to="<%= index %>"
+                        class=<%=index==0 ? "active" : "" %>></button>
+                    <% }) %>
+                 </div>
+                <div class="carousel-inner">
+                    <% item.dataValues.file.forEach((element,index)=>{ %>
+                    <div class="carousel-item <%= index == 0 ? 'active':''%>">
+                        <img src="<%= element.location %>" class="d-block w-100" alt="...">
+                    </div>
+                    <% }) %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%=i%>"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel<%=i%>"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <div id="carousel<%=i%>" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                <div class="carousel-indicators">
+                    <% item.dataValues.file.forEach((element,index)=>{ %>
+                        <button type="button" data-bs-target="#carousel<%=i%>" data-bs-slide-to="<%= index %>"
+                            class=<%=index==0 ? "active" : "" %>>
+                        </button>
+                    <% }) %>
+                </div>
+                <div class="carousel-inner">
+                    <% item.dataValues.file.forEach((element,index)=>{ %>
+                        <div class="carousel-item <%= index == 0 ? 'active':''%>">
+                            <img src="<%= element.location %>" class="d-block w-100" alt="...">
+                        </div>
+                    <% }) %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%=i%>"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel<%=i%>"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+            <div class="card-body text-dark">
+
+                    <div class="row justify-content-between">
+                        <div class="col-4">
+                
+                <%if(item.dataValues.likes){%>
+                                <h4><i class="bi <%=item.dataValues.likes.indexOf(useridLogged)<0?'bi-heart':'bi-heart-fill'%>"
+                                    postId="<%=item.dataValues.id%>"></i><span class="ms-3"></span><i class="bi bi-chat-square"><a
+                                    href=></a></i><span class="ms-3"></span><i class="bi bi-send" data-bs-toggle="modal"
+                                    data-bs-target="#sendModal"></i>
+                                </h4>
+                        </div>
+                        <div class="col-4 text-end">
+                            <h4><i class="bi bi-bookmark"></i></h4>
+                        </div>
+                    </div>
+                    <strong>
+                    <%=item.dataValues.likes.length%> likes
+                    </strong>
+
+                <%}else{%>
+                                <h4><i class="bi bi-heart" postId="<%= item.dataValues.id %>"></i><span class="ms-3"></span><i
+                                    class="bi bi-chat-square"></i><span class="ms-3"></span><i class="bi bi-send"
+                                    data-bs-toggle="modal" data-bs-target="#sendModal"></i>
+                                </h4>
+                        </div>
+                        <div class="col-4 text-end">
+                            <h4><i class="bi bi-bookmark"></i></h4>
+                        </div>
+                    </div>
+                <%}%>
+                <div class="mt-1 mb-1">
+                    <p class="card-text">
+                        <a class="usernamePost me-2" href="/profile/<%=item.dataValues.User.dataValues.username%>">
+                            <strong><%=item.dataValues.User.dataValues.username%></strong>
+                        </a>
+                        <%= item.dataValues.caption %>
+                    </p>
+                </div>
+                <div class="mb-1">
+                    <a href="/posts/<%= item.dataValues.id %>" style="color:grey">View all comments</a>
+                </div>
+                <%comments.forEach(element=>{%>
+                    <%if(element.dataValues.PostId==item.dataValues.id){%>
+                        <div>
+                            <p class="card-text">
+                                <a class="usernamePost me-2"
+                                    href="/profile/<%=element.dataValues.User.dataValues.username%>">
+                                    <strong>
+                                        <%=element.dataValues.User.dataValues.username%>
+                                    </strong>
+                                </a>
+                                <%= element.dataValues.comment %>
+                            </p>
+                        </div>
+                    <%}%>
+                <%})%>
+            </div>
+
+            <div class="card-footer bg-transparent">
+                <div class="row">
+                    <div class="col-12">
+                        <form class="comment" postId="<%= item.dataValues.id %>">
+                            <input type="text" style="border:none" placeholder="Add a comment...">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <%}else{%>
+        <div class="card mb-3" style="max-width: 600px;">
+            <div class="card-header bg-transparent">
+                <div class="row justify-content-between mb-1 mt-1 align-items-center">
+                    <div class="col-4">
+                        <a class="usernamePost" href="/profile/<%=item.dataValues.User.dataValues.username%>"><img
+                            src="<%=item.dataValues.User.dataValues.Profile.dataValues.profilepic.location%>"
+                            class="miniProfilePic me-2">
+                            <strong>
+                                <%=item.dataValues.User.dataValues.username%>
+                            </strong>
+                        </a>
+                    </div>
+                    <div class="col-4 text-end">
+                        <i class="bi bi-three-dots" data-bs-toggle="modal" data-bs-target="#onPostModal"></i>
+                    </div>
+                </div>
+            </div>
+            <img src="<%= item.dataValues.file[0].location %>" class="card-img-top" alt="img">
+            
+            <div class="card-body text-dark">
+                <div class="row justify-content-between">
+                    <div class="col-4">
+                <%if(item.dataValues.likes){%>
+                            <h4><i class="bi <%=item.dataValues.likes.indexOf(useridLogged)<0?'bi-heart':'bi-heart-fill'%>"
+                                postId="<%=item.dataValues.id%>"></i><span class="ms-3"></span><i
+                                class="bi bi-chat-square"></i><span class="ms-3"></span><i class="bi bi-send" data-bs-toggle="modal"
+                                data-bs-target="#sendModal"></i>
+                            </h4>
+                    </div>
+                    <div class="col-4 text-end">
+                        <h4><i class="bi bi-bookmark"></i></h4>
+                    </div>
+                </div>
+                <strong>
+                    <%=item.dataValues.likes.length%> likes
+                </strong>
+                <%}else{%>
+                            <h4><i class="bi bi-heart" postId="<%= item.dataValues.id %>"></i><span class="ms-3"></span><i
+                                class="bi bi-chat-square"></i><span class="ms-3"></span><i class="bi bi-send" data-bs-toggle="modal"
+                                data-bs-target="#sendModal"></i>
+                            </h4>
+                    </div>
+                    <div class="col-4 text-end">
+                        <h4><i class="bi bi-bookmark"></i></h4>
+                    </div>
+                </div>
+                <%}%>
+                <div class="mt-1 mb-1">
+                    <p class="card-text">
+                        <a class="usernamePost me-2" href="/profile/<%=item.dataValues.User.dataValues.username%>">
+                            <strong>
+                                <%=item.dataValues.User.dataValues.username%>
+                            </strong>
+                        </a>
+                        <%=item.dataValues.caption%>
+                        </p>
+                </div>
+                <div class="mb-1">
+                    <a href="/posts/<%= item.dataValues.id%>" style="color:grey">View all comments</a>
+                </div>
+                <%comments.forEach(element=>{%>
+                <%if(element.dataValues.PostId==item.dataValues.id){%>
+                    <div>
+                        <p class="card-text">
+                            <a class="usernamePost me-2" href="/profile/<%=element.dataValues.User.dataValues.username%>">
+                                <strong>
+                                    <%=element.dataValues.User.dataValues.username%>
+                                </strong>
+                            </a>
+                            <%=element.dataValues.comment%>
+                        </p>
+                    </div>
+                <%}%>
+                <%})%>
+            </div>
+
+            <div class="card-footer bg-transparent">
+                <div class="row">
+                    <div class="col-12">
+                        <form class="comment" postId="<%= item.dataValues.id %>">
+                            <input type="text" style="border:none" placeholder="Add a comment...">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    <%}%>
+<%})%>

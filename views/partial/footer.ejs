@@ -1,0 +1,138 @@
+<script>
+    $(document).ready(function () {
+        $("body").on("click", "h4 .bi-heart", function () {
+            if ($(this).parent().parent().parent().next().hasClass("mt-1")) {
+                $(this).parent().parent().parent().after('<strong>1 like</strong>')
+            } else {
+                let replace = Number($(this).parent().parent().parent().next().text().split(' ')[0]) + 1 + ' likes'
+                $(this).parent().parent().parent().next().text(replace)
+            }
+            let postId = $(this).attr("postId")
+            $.ajax({
+                method: "GET",
+                url: "/likes",
+                data: { postId }
+            }).done(function (data) {
+                if (data.posts[0].likes) likes = data[0].likes
+                likes.push(data.username.id)
+            });
+            $(this).removeClass("bi-heart").addClass("bi-heart-fill")
+        })
+        $("body").on("click", "h4 .bi-heart-fill", function () {
+            if ($(this).parent().parent().parent().next().text() == '1 like') {
+                $(this).parent().parent().parent().next().remove()
+            } else {
+                let replace = Number($(this).parent().parent().parent().next().text().split(' ')[0]) - 1 + ' likes'
+                console.log(replace)
+                $(this).parent().parent().parent().next().text(replace)
+            }
+            let postId = $(this).attr("postId")
+            let option = 'remove'
+            $.ajax({
+                method: "GET",
+                url: "/likes",
+                data: { postId, option }
+            }).done(function (data) {
+                if (data.posts[0].likes) likes = data[0].likes
+                likes.push(data.username.id)
+            });
+            $(this).removeClass("bi-heart-fill").addClass("bi-heart")
+        })
+
+        $(".carousel-control-next-icon").hide();
+        $(".carousel-control-prev-icon").hide();
+        $(".carousel").hover(function () {
+            $(".carousel-control-next-icon").toggle();
+            $(".carousel-control-prev-icon").toggle();
+        });
+        $("body").on("click", "h4 .bi-bookmark", function () {
+            $(this).removeClass("bi-bookmark").addClass("bi-bookmark-check-fill")
+        })
+        $("body").on("click", "h4 .bi-bookmark-check-fill", function () {
+            $(this).removeClass("bi-bookmark-check-fill").addClass("bi-bookmark")
+        })
+        $("body").on("click", ".followButton", function () {
+            $(this).html("Following").removeClass("followButton").addClass("unfollowButton")
+        })
+        $("body").on("click", ".unfollowButton", function () {
+            $(this).html("Follow").removeClass("unfollowButton").addClass("followButton")
+        })
+        $("body").on("click", ".bi-chat-square", function () {
+            $(this).removeClass("bi-chat-square").addClass("bi-chat-square-fill")
+        })
+        $("body").on("click", ".bi-chat-square-fill", function () {
+            $(this).removeClass("bi-chat-square-fill").addClass("bi-chat-square")
+        })
+    })
+    let countFileInput = 1;
+    $("#form-add-issue").on('click', '#add-file-form', function (event) {
+        event.preventDefault()
+        $('.file-input').last().after(`
+      <div class="mb-3 d-flex file-input">
+          <input type="file" data-id="${countFileInput}" id="files${countFileInput}" name="files${countFileInput}" class="form-control file-preview" placeholder="Files">
+          <button id="delete-file-input" type="button" class="btn btn-outline-danger ms-3">-</button>
+          </div>
+      `)
+        countFileInput++
+    })
+
+    $("#form-add-issue").on('click', '#delete-file-input', function (event) {
+        event.preventDefault()
+
+        let idFile = $(this).parent().prev().attr('data-id')
+        let firstInput = $(this).prev().attr('data-id')
+
+        if (idFile == "img-preview") {
+            $(this).parent().prev().remove();
+            if (firstInput == "0") {
+                $(this).prev().val("")
+                $('#delete-file-input').attr('hidden', true)
+            } else {
+                $(this).parent().remove();
+            }
+        } else {
+            $(this).parent().remove();
+        }
+    })
+
+    $('#form-add-issue').on('change', '.file-preview', function (event) {
+        let tes = $(this).val().split(".")
+        switch (tes.pop()) {
+            case "jpg":
+            case "jpeg":
+            case "png":
+            case "svg":
+            case "webp":
+
+                var reader = new FileReader();
+                reader.onload = function () {
+                    $(`#img${idFile}`).attr("src", reader.result)
+                }
+
+                let idFile = $(this).attr('data-id')
+
+                if (idFile == "0") {
+                    $('#delete-file-input').attr('hidden', false)
+                }
+
+                let idImgOne = $(this).parent().prev().attr('data-id')
+                if (idImgOne == "img-preview") {
+                    $(this).parent().prev().html(`
+              <div data-id="img-preview" class="text-center"><img id="img${idFile}" src="" class="mb-3" style="max-width:75%"></div>
+              `)
+                } else {
+                    $(this).parent().before(`
+              <div data-id="img-preview" class="text-center"><img id="img${idFile}" src="" class="mb-3" style="max-width:75%"></div>
+              `)
+                }
+                reader.readAsDataURL(event.target.files[0]);
+                break;
+            default:
+                break;
+        }
+    })
+    
+</script>
+</body>
+
+</html>

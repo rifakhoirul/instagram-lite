@@ -1,0 +1,562 @@
+<% include partial/header.ejs %>
+  <section>
+    <div class="container">
+      <div class="d-flex flex-column align-items-center" id="mainPage">
+        <% posts.forEach((item,i)=> { %>
+          <%if(item.dataValues.file.length>1){%>
+            <div class="card mb-3 sizePic">
+              <div class="card-header bg-transparent">
+                <div class="row justify-content-between mb-1 mt-1 align-items-center">
+                  <div class="col-6">
+                    <a class="usernamePost" href="/profile/<%=item.dataValues.User.dataValues.username%>"><img
+                        src="<%=item.dataValues.User.dataValues.Profile.dataValues.profilepic.location%>"
+                        class="miniProfilePic me-2"><strong>
+                        <%=item.dataValues.User.dataValues.username%>
+                      </strong>
+                    </a>
+                  </div>
+                  <div class="col-3 text-end">
+                    <i class="bi bi-three-dots" data-bs-toggle="modal" data-bs-target="#onPostModal"></i>
+                  </div>
+                </div>
+              </div>
+              <div id="carousel<%=i%>" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                <div class="carousel-indicators">
+                  <% item.dataValues.file.forEach((element,index)=>{ %>
+                    <button type="button" data-bs-target="#carousel<%=i%>" data-bs-slide-to="<%= index %>"
+                      class=<%=index==0 ? "active" : "" %>></button>
+                    <% }) %>
+                </div>
+                <div class="carousel-inner">
+                  <% item.dataValues.file.forEach((element,index)=>{ %>
+                    <div class="carousel-item <%= index == 0 ? 'active':''%>">
+                      <img src="<%= element.location %>" class="d-block w-100" alt="...">
+                    </div>
+                    <% }) %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%=i%>"
+                  data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel<%=i%>"
+                  data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+              <div class="card-body text-dark">
+                <div class="row justify-content-between">
+                  <div class="col-5">
+                    <%if(item.dataValues.likes){%>
+                      <h4><i class="bi <%=item.dataValues.likes.indexOf(useridLogged)<0?'bi-heart':'bi-heart-fill'%>"
+                          postId="<%=item.dataValues.id%>"></i><span class="ms-3"></span><a
+                          href="/posts/<%= item.dataValues.id %>" style="color:black"><i
+                            class="bi bi-chat-square"></i></a><span class="ms-3"></span><i class="bi bi-send"
+                          data-bs-toggle="modal" data-bs-target="#sendModal"></i></h4>
+                  </div>
+                  <div class="col-4 text-end">
+                    <h4><i class="bi bi-bookmark"></i></h4>
+                  </div>
+                </div>
+                <%if(item.dataValues.likes[0]){%>
+                  <strong><%=item.dataValues.likes.length%> likes</strong>
+                  <%}}else{%>
+                    <h4><i class="bi bi-heart" postId="<%= item.dataValues.id %>"></i><span class="ms-3"></span><a
+                        href="/posts/<%= item.dataValues.id %>" style="color:black"><i
+                          class="bi bi-chat-square"></i></a><span class="ms-3"></span><i class="bi bi-send"
+                        data-bs-toggle="modal" data-bs-target="#sendModal"></i></h4>
+              </div>
+              <div class="col-4 text-end">
+                <h4><i class="bi bi-bookmark"></i></h4>
+              </div>
+            </div>
+            <%}%>
+              <div class="mt-1 mb-1">
+                <p class="card-text">
+                  <a class="usernamePost me-2" href="/profile/<%=item.dataValues.User.dataValues.username%>"><strong>
+                      <%=item.dataValues.User.dataValues.username%>
+                    </strong>
+                  </a>
+                  <%= item.dataValues.caption %>
+                </p>
+              </div>
+              <div class="mb-1">
+                <a href="/posts/<%= item.dataValues.id %>" style="color:grey">View all comments</a>
+              </div>
+
+              <%comments.forEach(element=>{%>
+                <%if(element.dataValues.PostId==item.dataValues.id && commentLimitter<2){%>
+                  <div>
+                    <p class="card-text">
+                      <a class="usernamePost me-2"
+                        href="/profile/<%=element.dataValues.User.dataValues.username%>"><strong>
+                          <%=element.dataValues.User.dataValues.username%>
+                        </strong>
+                      </a>
+                      <%= element.dataValues.comment %>
+                        <%commentLimitter++%>
+                    </p>
+                  </div>
+                  <%}%>
+                    <%});commentLimitter=0%>
+      </div>
+      <div class="card-footer bg-transparent">
+        <div class="row">
+          <div class="col-12">
+            <form class="comment" postId="<%= item.dataValues.id %>">
+              <input type="text" style="border:none" placeholder="Add a comment...">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%} else {%>
+      <div class="card mb-3 sizePic">
+        <div class="card-header bg-transparent">
+          <div class="row justify-content-between mb-1 mt-1 align-items-center">
+            <div class="col-6">
+              <a class="usernamePost" href="/profile/<%=item.dataValues.User.dataValues.username%>"><img
+                  src="<%=item.dataValues.User.dataValues.Profile.dataValues.profilepic.location%>"
+                  class="miniProfilePic me-2">
+                <strong>
+                  <%=item.dataValues.User.dataValues.username%>
+                </strong>
+              </a>
+            </div>
+            <div class="col-3 text-end">
+              <i class="bi bi-three-dots" data-bs-toggle="modal" data-bs-target="#onPostModal"></i>
+            </div>
+          </div>
+        </div>
+        <img src="<%= item.dataValues.file[0].location %>" class="card-img-top" alt="img">
+        <div class="card-body text-dark">
+          <div class="row justify-content-between">
+            <div class="col-5">
+              <%if(item.dataValues.likes){%>
+
+                <h4><i class="bi <%=item.dataValues.likes.indexOf(useridLogged)<0?'bi-heart':'bi-heart-fill'%>"
+                    postId="<%=item.dataValues.id%>"></i><span class="ms-3"></span><a
+                    href="/posts/<%= item.dataValues.id%>" style="color:black"><i
+                      class="bi bi-chat-square"></i></a><span class="ms-3"></span><i class="bi bi-send"
+                    data-bs-toggle="modal" data-bs-target="#sendModal"></i>
+                </h4>
+            </div>
+            <div class="col-4 text-end">
+              <h4><i class="bi bi-bookmark"></i></h4>
+            </div>
+          </div>
+          <%if(item.dataValues.likes[0]){%>
+            <strong><%=item.dataValues.likes.length%> likes</strong>
+            <%}}else{%>
+              <h4><i class="bi bi-heart" postId="<%= item.dataValues.id %>"></i><span class="ms-3"></span><a
+                  href="/posts/<%= item.dataValues.id%>" style="color:black"><i class="bi bi-chat-square"></i></a><span
+                  class="ms-3"></span><i class="bi bi-send" data-bs-toggle="modal" data-bs-target="#sendModal"></i>
+              </h4>
+        </div>
+        <div class="col-4 text-end">
+          <h4><i class="bi bi-bookmark"></i></h4>
+        </div>
+      </div>
+      <%}%>
+
+        <div class="mt-1 mb-1">
+          <p class="card-text">
+            <a class="usernamePost me-2" href="/profile/<%=item.dataValues.User.dataValues.username%>">
+              <strong>
+                <%=item.dataValues.User.dataValues.username%>
+              </strong>
+            </a>
+            <%=item.dataValues.caption%>
+          </p>
+        </div>
+        <div class="mb-1">
+          <a href="/posts/<%= item.dataValues.id%>" style="color:grey">View all comments</a>
+        </div>
+
+        <%comments.forEach(element=>{%>
+          <%if(element.dataValues.PostId==item.dataValues.id && commentLimitter<2){%>
+            <div>
+              <p class="card-text">
+                <a class="usernamePost me-2" href="/profile/<%=element.dataValues.User.dataValues.username%>"><strong>
+                    <%=element.dataValues.User.dataValues.username%>
+                  </strong>
+                </a>
+                <%=element.dataValues.comment%>
+                  <% commentLimitter++ %>
+              </p>
+            </div>
+            <%}%>
+              <%});commentLimitter=0%>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <div class="row">
+                    <div class="col-12">
+                      <form class="comment" postId="<%= item.dataValues.id %>">
+                        <input type="text" style="border:none" placeholder="Add a comment...">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <%}%>
+                  <%})%>
+                    </div>
+                    </div>
+  </section>
+<!-- New Post -->
+<div class="modal fade" id="newPostModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="newPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form-add-issue" action="/add" method="POST" encType="multipart/form-data">
+                <div class="modal-header" >
+                    <h5 class="modal-title" id="newPostModalLabel">New Post</h5>
+                </div>
+                <div class="modal-body">
+                    <section class="">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col">
+                                    <div class="input-group mb-3 file-input">
+                                        <input type="file" data-id="0" id="files0" name="files0"
+                                            class="form-control file-preview" aria-describedby="inputGroupFileAddon04"
+                                            aria-label="Upload" required />
+                                        <button id="delete-file-input" type="button" class="btn btn-outline-danger ms-3"
+                                            hidden="">-</button>
+                                    </div>
+                                    <button id="add-file-form" type="button" class="btn btn-outline-primary">Add more
+                                        image</button>
+                                    <div class="form-floating mb-3 mt-3">
+                                        <textarea class="form-control" placeholder="Leave a comment here"
+                                            id="floatingTextarea2" name="caption" style="height: 100px"></textarea>
+                                        <label for="floatingTextarea2">Write a caption...</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+  <script>
+    
+    var stopper = 0
+    $(document).ready(function () {
+      $("body").on("submit", ".comment", async function () {
+        event.preventDefault()
+        let postId = $(this).attr("postId")
+        let addComment = $(this).children().val()
+        let username
+        await $.ajax({
+          method: "GET",
+          url: "/comment",
+          data: { postId, addComment }
+        }).done(async function (data) {
+          username = data.username
+        });
+        if ($(this).parent().parent().parent().prev().children().last().prev().children().hasClass("card-text") && $(this).parent().parent().parent().prev().children().last().hasClass("mb-1") == false) {
+          $(this).parent().parent().parent().prev().children().last().prev().children().remove()
+          $(this).parent().parent().parent().prev().children().last().after(`
+                    <div><p class="card-text"> <a class="usernamePost me-2" href="/profile/${username}">
+                    <strong>${username}</strong></a>${addComment}</p></div>`)
+        } else {
+          $(this).parent().parent().parent().prev().children().last().after(`
+                    <div><p class="card-text"> <a class="usernamePost me-2" href="/profile/${username}">
+                    <strong>${username}</strong></a>${addComment}</p></div>`)
+        }
+        $(this).children().val('')
+      })
+      
+      $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+          if (stopper == 0) {
+            $.ajax({
+              method: "GET",
+              url: "/timeline",
+              // data: { postId }
+            }).done(function (data) {
+              if (!data.posts[0]) {
+                stopper = 1
+              } else {
+                //insert here boi
+                let html = ''
+                data.posts.forEach((item, i) => {
+                  if (item.file.length > 1) {
+                    let header = `
+                                <div class="card-header bg-transparent">
+                                <div class="row justify-content-between mb-1 mt-1 align-items-center">
+                                <div class="col-6">
+                                    <a class="usernamePost" href="/profile/${item.User.username}"><img
+                                    src="${item.User.Profile.profilepic.location}"
+                                    class="miniProfilePic me-2"><strong>
+                                    ${item.User.username}
+                                    </strong>
+                                    </a>
+                                </div>
+                                <div class="col-3 text-end">
+                                    <i class="bi bi-three-dots" data-bs-toggle="modal" data-bs-target="#onPostModal"></i>
+                                </div>
+                                </div>
+                                </div>
+                                `
+                    let carousel = `
+                                <div id="carousel${i + data.offsetter}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                                <div class="carousel-indicators">
+                                `
+                    item.file.forEach((element, index) => {
+                      let carousel1 = `
+                                    <button type="button" data-bs-target="#carousel${i + data.offsetter}" data-bs-slide-to="${index}"
+                                    class=${index == 0 ? "active" : ""}></button>
+                                    `
+                      carousel += carousel1
+                    })
+                    carousel += `
+                                </div>
+                                <div class="carousel-inner">
+                                `
+                    item.file.forEach((element, index) => {
+                      let carousel2 = `
+                                    <div class="carousel-item ${index == 0 ? 'active' : ''}">
+                                    <img src="${element.location}" class="d-block w-100" alt="...">
+                                    </div>
+                                    `
+                      carousel += carousel2
+                    })
+                    carousel += `
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel${i + data.offsetter}"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel${i + data.offsetter}"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                                </button>
+                                </div>
+                                `
+                    let cardBody = `
+                                <div class="card-body text-dark">
+                                <div class="row justify-content-between">
+                                <div class="col-5">
+                                `
+                    let cardBody1 = ''
+                    if (item.likes) {
+                      cardBody1 += `
+                                    <h4><i class="bi ${item.likes.indexOf(data.useridLogged) < 0 ? 'bi-heart' : 'bi-heart-fill'}"
+                                                postId="${item.id}"></i><span class="ms-3"></span><a href="/posts/${item.id}" style="color:black"><i class="bi bi-chat-square"></i></a>
+                                                <span class="ms-3"></span><i class="bi bi-send" data-bs-toggle="modal"
+                                                data-bs-target="#sendModal"></i>
+                                            </h4>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <h4><i class="bi bi-bookmark"></i></h4>
+                                    </div>
+                                    </div>
+                                    `
+                      if (item.likes[0]) {
+                        cardBody1 += `
+                                    <strong>${item.likes.length} likes</strong>
+                                    `
+                      }
+                    } else {
+                      cardBody1 += `
+                                    <h4><i class="bi bi-heart" postId="${item.id}"></i><span class="ms-3"></span><a href="/posts/${item.id}" style="color:black"><i class="bi bi-chat-square"></i></a>
+                                                <span class="ms-3"></span><i class="bi bi-send"
+                                                data-bs-toggle="modal" data-bs-target="#sendModal"></i>
+                                            </h4>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <h4><i class="bi bi-bookmark"></i></h4>
+                                    </div>
+                                    </div>
+                                    `
+                    }
+                    cardBody += cardBody1
+                    cardBody += `
+                                <div class="mt-1 mb-1">
+                                <p class="card-text">
+                                    <a class="usernamePost me-2" href="/profile/${item.User.username}">
+                                        <strong>${item.User.username}</strong>
+                                    </a>
+                                    ${item.caption}
+                                </p>
+                                </div>
+                                <div class="mb-1">
+                                <a href="/posts/${item.id}" style="color:grey">View all comments</a>
+                                </div>
+                                `
+                    let cardComments = ''
+                    let commentLimitter = 0
+                    data.comments.forEach(element => {
+                      if (element.PostId == item.id && commentLimitter < 2) {
+                        cardComments += `
+                                        <div>
+                                        <p class="card-text">
+                                            <a class="usernamePost me-2"
+                                                href="/profile/${element.User.username}">
+                                                <strong>
+                                                    ${element.User.username}
+                                                </strong>
+                                            </a>
+                                            ${element.comment}
+                                        </p>
+                                        </div>
+                                        `
+                        commentLimitter++
+                      }
+                    })
+                    commentLimitter = 0
+                    cardBody += cardComments
+                    cardBody += `</div>`
+                    let cardFooter = `
+                                <div class="card-footer bg-transparent">
+                                <div class="row">
+                                <div class="col-12">
+                                    <form class="comment" postId="${item.id}">
+                                        <input type="text" style="border:none" placeholder="Add a comment...">
+                                    </form>
+                                </div>
+                                </div>
+                                </div>
+                                `
+                    let cardAll = `<div class="card mb-3 sizePic" >`
+                    cardAll = cardAll + header + carousel + cardBody + cardFooter
+                    cardAll += `</div>`
+                    html += cardAll
+                  } else {
+                    let header = `
+                                <div class="card-header bg-transparent">
+                                <div class="row justify-content-between mb-1 mt-1 align-items-center">
+                                <div class="col-6">
+                                    <a class="usernamePost" href="/profile/${item.User.username}"><img
+                                        src="${item.User.Profile.profilepic.location}"
+                                        class="miniProfilePic me-2">
+                                        <strong>
+                                            ${item.User.username}
+                                        </strong>
+                                    </a>
+                                </div>
+                                <div class="col-3 text-end">
+                                    <i class="bi bi-three-dots" data-bs-toggle="modal" data-bs-target="#onPostModal"></i>
+                                </div>
+                                </div>
+                                </div>
+                                `
+                    let image = `<img src="${item.file[0].location}" class="card-img-top" alt="img">`
+                    let cardBody = `
+                                <div class="card-body text-dark">
+                                <div class="row justify-content-between">
+                                <div class="col-5">
+                                `
+                    let cardBody1 = ''
+                    if (item.likes) {
+                      cardBody1 += `
+                                    <h4><i class="bi ${item.likes.indexOf(data.useridLogged) < 0 ? 'bi-heart' : 'bi-heart-fill'}"
+                                            postId="${item.id}"></i><span class="ms-3"></span><a href="/posts/${item.id}" style="color:black"><i class="bi bi-chat-square"></i></a>
+                                            <span class="ms-3"></span><i class="bi bi-send" data-bs-toggle="modal"
+                                            data-bs-target="#sendModal"></i>
+                                        </h4>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                    <h4><i class="bi bi-bookmark"></i></h4>
+                                    </div>
+                                    </div>
+                                    `
+                      if (item.likes[0]) {
+                        cardBody1 += `
+                                    <strong>${item.likes.length} likes</strong>
+                                    `
+                      }
+                    } else {
+                      cardBody1 = `
+                                    <h4><i class="bi bi-heart" postId="${item.id}"></i><span class="ms-3"></span><a href="/posts/${item.id}" style="color:black"><i class="bi bi-chat-square"></i></a>
+                                            <span class="ms-3"></span><i class="bi bi-send" data-bs-toggle="modal"
+                                            data-bs-target="#sendModal"></i>
+                                        </h4>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                    <h4><i class="bi bi-bookmark"></i></h4>
+                                    </div>
+                                    </div>
+                                    `
+                    }
+                    cardBody += cardBody1
+                    cardBody += `
+                                <div class="mt-1 mb-1">
+                                <p class="card-text">
+                                    <a class="usernamePost me-2" href="/profile/${item.User.username}">
+                                        <strong>
+                                            ${item.User.username}
+                                        </strong>
+                                    </a>
+                                    ${item.caption}
+                                    </p>
+                                </div>
+                                <div class="mb-1">
+                                <a href="/posts/${item.id}" style="color:grey">View all comments</a>
+                                </div>
+                                `
+                    let cardComments = ''
+                    let commentLimitter = 0
+                    data.comments.forEach(element => {
+                      if (element.PostId == item.id && commentLimitter < 2) {
+                        cardComments += `
+                                        <div>
+                                        <p class="card-text">
+                                        <a class="usernamePost me-2" href="/profile/${element.User.username}">
+                                            <strong>
+                                                ${element.User.username}
+                                            </strong>
+                                        </a>
+                                        ${element.comment}
+                                        </p>
+                                        </div>
+                                        `
+                        commentLimitter++
+                      }
+                    })
+                    commentLimitter = 0
+                    cardBody += cardComments
+                    cardBody += `</div>`
+
+                    let cardFooter = `
+                                <div class="card-footer bg-transparent">
+                                <div class="row">
+                                <div class="col-12">
+                                    <form class="comment" postId="${item.id}">
+                                        <input type="text" style="border:none" placeholder="Add a comment...">
+                                    </form>
+                                </div>
+                                </div>
+                                </div>
+                                `
+                    let cardAll = `<div class="card mb-3 sizePic">`
+                    cardAll = cardAll + header + image + cardBody + cardFooter
+                    cardAll += `</div>`
+                    html += cardAll
+                  }
+                })
+                $("#mainPage").append(html)
+              }
+            });
+          }
+        }
+      });
+
+      
+    })
+  </script>
+
+
+  <% include partial/modal.ejs %>
+    <% include partial/footer.ejs %>
